@@ -61,13 +61,15 @@ Temperature/humidity carry a `sensor` label (`indoor`/`outdoor`, or a sensor-fam
 | `ecowitt_wind_speed_mps` | Wind speed |
 | `ecowitt_wind_gust_mps` | Wind gust speed |
 | `ecowitt_wind_max_daily_mps` | Daily maximum wind speed |
-| `ecowitt_wind_direction_degrees` | Wind direction |
+| `ecowitt_wind_direction_degrees` | Wind direction (instantaneous) |
+| `ecowitt_wind_direction_10min_average_degrees` | 10-minute average wind direction (gateway id `0x6D`) |
 | `ecowitt_solar_radiation_wm2` | Solar radiation |
 | `ecowitt_uv_index` | UV index (0–15) |
 | `ecowitt_uv_microwatts_per_m2` | UV radiation (if reported) |
 | `ecowitt_vapor_pressure_deficit_pascals` | Vapor pressure deficit (gateway id `"5"`) |
-| `ecowitt_rain_millimeters{period,gauge}` | Rain accumulation; `period` = `event`/`day`/`week`/`month`/`year`/`total`, `gauge` = `traditional`/`piezo` |
+| `ecowitt_rain_millimeters{period,gauge}` | Rain accumulation; `period` = `event`/`hourly`/`day`/`week`/`month`/`year`/`total`, `gauge` = `traditional`/`piezo` |
 | `ecowitt_rain_rate_mm_per_hour{gauge}` | Rain rate |
+| `ecowitt_piezo_rain_state` | Piezo (haptic) rain sensor state (1 = rain currently detected) |
 | `ecowitt_soil_moisture_percent{channel,name}` | Soil moisture |
 | `ecowitt_leaf_wetness_percent{channel,name}` | Leaf wetness (WH35) |
 | `ecowitt_water_leak_state{channel,name}` | Water leak state (WH55; 0 = normal) |

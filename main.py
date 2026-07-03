@@ -259,6 +259,10 @@ COMMON_ID_MAP: Dict[str, Tuple[str, str, Dict[str, str]]] = {
     '0x16': ('ecowitt_uv_microwatts_per_m2',
              'Ultraviolet radiation in microwatts per square meter', {}),
     '0x17': ('ecowitt_uv_index', 'Ultraviolet index (0-15)', {}),
+    # id 0x6D confirmed against the gateway UI as the 10-minute average wind
+    # direction (the UI's "10 Min. Avg Wind Direction"); a bearing in degrees.
+    '0x6D': ('ecowitt_wind_direction_10min_average_degrees',
+             '10-minute average wind direction in degrees', {}),
 }
 
 #: ``rain``/``piezoRain`` id -> period label. ``rate`` becomes its own rate
@@ -266,6 +270,10 @@ COMMON_ID_MAP: Dict[str, Tuple[str, str, Dict[str, str]]] = {
 RAIN_ID_MAP: Dict[str, str] = {
     '0x0D': 'event',
     '0x0E': 'rate',
+    # 0x7C = hourly rain: it is the one live accumulation id with no counterpart
+    # in the gateway's labeled get_rain_totals / get_piezo_rain endpoints (which
+    # expose only day/week/month/year), leaving hourly as the sole fit.
+    '0x7C': 'hourly',
     '0x10': 'day',
     '0x11': 'week',
     '0x12': 'month',
@@ -401,9 +409,20 @@ class EcowittCollector:
     ) -> None:
         for e in entries:
             _id = e.get('id')
+            if _id == 'srain_piezo':
+                # not an accumulation: a state flag on the piezo gauge
+                try:
+                    store.add_raw(
+                        'ecowitt_piezo_rain_state',
+                        'Piezo (haptic) rain sensor state '
+                        '(1 = rain currently detected, 0 = dry)',
+                        float(e['val']), {}
+                    )
+                except (ValueError, KeyError):
+                    store.unmapped += 1
+                continue
             period = RAIN_ID_MAP.get(_id)
             if period is None:
-                # e.g. srain_piezo (a state), 0x7C (unidentified rain field)
                 logger.warning(
                     'Unmapped %s rain id %s (val=%s)', gauge, _id, e.get('val')
                 )
