@@ -51,6 +51,9 @@ REQUEST_TIMEOUT: int = 10
 UNPAIRED_ID: str = 'FFFFFFFF'
 DISABLED_ID: str = 'FFFFFFFE'
 
+#: Fallback number of ``get_sensors_info`` pages if /get_version doesn't say.
+SENSOR_PAGES_FALLBACK: int = 4
+
 
 class LabeledGaugeMetricFamily(Metric):
     """Not sure why the upstream one doesn't allow labels..."""
@@ -310,8 +313,9 @@ class EcowittCollector:
         self.host: str = self._env_or_err('ECOWITT_HOST')
         self.base_url: str = f'http://{self.host}'
         logger.info('Ecowitt gateway base URL: %s', self.base_url)
-        # firmware info is static; fetched once and cached
-        self._firmware: Optional[Tuple[str, str]] = None
+        # /get_version is static per firmware; fetched once and cached. It
+        # supplies both the firmware info and the sensor-registry page count.
+        self._version_data: Optional[dict] = None
 
     def _get(self, path: str) -> dict:
         url = self.base_url + path
@@ -319,6 +323,41 @@ class EcowittCollector:
         r = requests.get(url, timeout=REQUEST_TIMEOUT)
         r.raise_for_status()
         return r.json()
+
+    def _get_version_data(self) -> dict:
+        """Fetch and cache /get_version (static per firmware)."""
+        if self._version_data is None:
+            self._version_data = self._get('/get_version')
+        return self._version_data
+
+    def _get_all_sensors(self) -> List[dict]:
+        """Fetch every page of the sensor registry, deduplicated.
+
+        The registry is paginated; the number of pages is reported by
+        /get_version's ``sensorid_page`` (this firmware has 4 pages of 16 slots).
+        Paging past the last page keeps returning data (it wraps) rather than an
+        empty list, so we page by that count and dedupe on the per-slot ``type``
+        enum defensively.
+        """
+        try:
+            pages = int(self._get_version_data().get('sensorid_page'))
+        except (TypeError, ValueError):
+            pages = SENSOR_PAGES_FALLBACK
+        if pages < 1:
+            pages = SENSOR_PAGES_FALLBACK
+        entries: List[dict] = []
+        seen = set()
+        for page in range(1, pages + 1):
+            data = self._get(f'/get_sensors_info?page={page}')
+            if not isinstance(data, list):
+                continue
+            for e in data:
+                key = e.get('type')
+                if key in seen:
+                    continue
+                seen.add(key)
+                entries.append(e)
+        return entries
 
     def collect(self) -> Generator[Metric, None, None]:
         """Yield all metric families for one scrape.
@@ -333,10 +372,7 @@ class EcowittCollector:
         start = time.time()
         try:
             self._handle_livedata(store, self._get('/get_livedata_info'))
-            for page in (1, 2):
-                self._handle_sensors(
-                    store, self._get(f'/get_sensors_info?page={page}')
-                )
+            self._handle_sensors(store, self._get_all_sensors())
             self._handle_firmware(store)
         except Exception as ex:
             logger.error('Scrape failed: %s', ex, exc_info=True)
@@ -375,6 +411,7 @@ class EcowittCollector:
             ('ch_pm25', self._handle_pm25_channels),
             ('ch_lds', self._handle_lds),
             ('co2', self._handle_co2),
+            ('debug', self._handle_debug),
         ]
         for key, handler in handlers:
             if data.get(key):
@@ -403,6 +440,19 @@ class EcowittCollector:
                 store.unmapped += 1
                 continue
             store.add(name, doc, value, unit, dict(labels))
+            # some common_list entries carry an inline low-voltage flag (e.g.
+            # the outdoor array on 0x03); a 0/1 flag, distinct from a 0-5 level,
+            # so expose it separately, tagged with its source id for provenance.
+            if 'battery' in e:
+                try:
+                    store.add_raw(
+                        'ecowitt_sensor_battery_flag',
+                        'Inline low-battery flag from a common_list entry '
+                        '(typically 1 = low); source id in the label',
+                        float(e['battery']), {'source_id': _id}
+                    )
+                except ValueError:
+                    pass
 
     def _handle_rain(
         self, store: MetricStore, entries: List[dict], gauge: str
@@ -684,6 +734,31 @@ class EcowittCollector:
                 store, e, {'sensor': 'co2', 'channel': '', 'name': ''}
             )
 
+    def _handle_debug(self, store: MetricStore, entries: List[dict]) -> None:
+        """Gateway-internal stats from the ``debug`` group."""
+        # numeric field -> (metric, documentation)
+        field_map = {
+            'heap': ('ecowitt_gateway_free_heap_bytes',
+                     'Gateway free heap memory in bytes'),
+            'runtime': ('ecowitt_gateway_runtime_seconds',
+                        'Gateway uptime in seconds since boot'),
+            'usr_interval': ('ecowitt_gateway_sensor_interval_seconds',
+                             'Gateway sensor data update interval in seconds'),
+        }
+        for e in entries:
+            for key, (metric, doc) in field_map.items():
+                if key in e:
+                    try:
+                        store.add_raw(metric, doc, float(e[key]))
+                    except (ValueError, TypeError):
+                        pass
+            if 'is_cnip' in e:
+                store.add_raw(
+                    'ecowitt_gateway_is_cnip',
+                    'Gateway is_cnip flag (1 = true, 0 = false)',
+                    1.0 if e['is_cnip'] else 0.0
+                )
+
     def _emit_battery(
         self, store: MetricStore, entry: dict, labels: Dict[str, str]
     ) -> None:
@@ -709,6 +784,16 @@ class EcowittCollector:
                 )
             except ValueError:
                 pass
+        # WS90 (piezo/haptic array) reports its supercapacitor voltage inline
+        if 'ws90cap_volt' in entry:
+            try:
+                store.add_raw(
+                    'ecowitt_sensor_capacitor_volts',
+                    'Sensor supercapacitor voltage in volts (WS90)',
+                    float(entry['ws90cap_volt']), dict(labels)
+                )
+            except ValueError:
+                pass
 
     # -- sensor registry (get_sensors_info) -------------------------------
 
@@ -726,13 +811,37 @@ class EcowittCollector:
             )
             if present:
                 rssi = e.get('rssi')
-                # absent sensors report rssi as "--"; only real dBm here
+                # absent sensors report rssi/signal as "--"; only real values here
                 if rssi not in (None, '', '--'):
                     try:
                         store.add_raw(
                             'ecowitt_sensor_rssi_dbm',
                             'Sensor received signal strength in dBm',
                             float(rssi), dict(labels)
+                        )
+                    except ValueError:
+                        pass
+                signal = e.get('signal')
+                if signal not in (None, '', '--'):
+                    try:
+                        store.add_raw(
+                            'ecowitt_sensor_signal',
+                            'Sensor signal quality (0-4 bars) from the registry',
+                            float(signal), dict(labels)
+                        )
+                    except ValueError:
+                        pass
+                # registry battery: raw "batt" from get_sensors_info. Distinct
+                # from the live-data battery level/voltage -- its semantics vary
+                # by sensor family (0-5 level for most, a 0/1 flag for some).
+                batt = e.get('batt')
+                if batt not in (None, ''):
+                    try:
+                        store.add_raw(
+                            'ecowitt_sensor_registry_battery',
+                            'Raw battery value from the sensor registry '
+                            '(get_sensors_info "batt"; semantics vary by family)',
+                            float(batt), dict(labels)
                         )
                     except ValueError:
                         pass
@@ -747,20 +856,26 @@ class EcowittCollector:
     # -- firmware (get_version) -------------------------------------------
 
     def _handle_firmware(self, store: MetricStore) -> None:
-        if self._firmware is None:
-            data = self._get('/get_version')
-            # e.g. "Version: GW3000B_V1.2.1" -> "GW3000B_V1.2.1"
-            version = data.get('version', '')
-            if ':' in version:
-                version = version.split(':', 1)[1].strip()
-            platform = data.get('platform', '')
-            self._firmware = (version, platform)
-        version, platform = self._firmware
+        data = self._get_version_data()
+        # e.g. "Version: GW3000B_V1.2.1" -> "GW3000B_V1.2.1"
+        version = data.get('version', '')
+        if ':' in version:
+            version = version.split(':', 1)[1].strip()
+        platform = data.get('platform', '')
         store.add_raw(
             'ecowitt_firmware_info',
             'Gateway firmware version info (constant 1)', 1.0,
             {'version': version, 'platform': platform}
         )
+        # newVersion is "1" when the gateway sees an available firmware update
+        try:
+            store.add_raw(
+                'ecowitt_gateway_firmware_update_available',
+                '1 if the gateway reports an available firmware update, else 0',
+                float(data.get('newVersion', 0))
+            )
+        except (ValueError, TypeError):
+            pass
 
     @staticmethod
     def _parse_iso_timestamp(value: str) -> Optional[float]:

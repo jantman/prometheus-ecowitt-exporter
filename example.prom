@@ -18,16 +18,16 @@ python_gc_collections_total{generation="2"} 0.0
 python_info{implementation="CPython",major="3",minor="14",patchlevel="5",version="3.14.5"} 1.0
 # HELP process_virtual_memory_bytes Virtual memory size in bytes.
 # TYPE process_virtual_memory_bytes gauge
-process_virtual_memory_bytes 5.2097024e+07
+process_virtual_memory_bytes 5.2252672e+07
 # HELP process_resident_memory_bytes Resident memory size in bytes.
 # TYPE process_resident_memory_bytes gauge
-process_resident_memory_bytes 3.9538688e+07
+process_resident_memory_bytes 4.0226816e+07
 # HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
 # TYPE process_start_time_seconds gauge
-process_start_time_seconds 1.78310509644e+09
+process_start_time_seconds 1.78310660373e+09
 # HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
 # TYPE process_cpu_seconds_total counter
-process_cpu_seconds_total 0.11
+process_cpu_seconds_total 0.09999999999999999
 # HELP process_open_fds Number of open file descriptors.
 # TYPE process_open_fds gauge
 process_open_fds 6.0
@@ -36,42 +36,45 @@ process_open_fds 6.0
 process_max_fds 524288.0
 # HELP ecowitt_temperature_celsius Temperature in degrees Celsius
 # TYPE ecowitt_temperature_celsius gauge
-ecowitt_temperature_celsius{channel="",name="",sensor="outdoor"} 26.888888888888893
+ecowitt_temperature_celsius{channel="",name="",sensor="outdoor"} 26.38888888888889
 ecowitt_temperature_celsius{channel="",name="",sensor="indoor"} 22.38888888888889
 # HELP ecowitt_humidity_percent Relative humidity in percent
 # TYPE ecowitt_humidity_percent gauge
-ecowitt_humidity_percent{channel="",name="",sensor="outdoor"} 72.0
+ecowitt_humidity_percent{channel="",name="",sensor="outdoor"} 74.0
 ecowitt_humidity_percent{channel="",name="",sensor="indoor"} 57.0
 # HELP ecowitt_apparent_temperature_celsius Apparent ("feels like") temperature in degrees Celsius
 # TYPE ecowitt_apparent_temperature_celsius gauge
-ecowitt_apparent_temperature_celsius{sensor="outdoor"} 28.77777777777778
+ecowitt_apparent_temperature_celsius{sensor="outdoor"} 26.38888888888889
 # HELP ecowitt_vapor_pressure_deficit_pascals Vapor pressure deficit in pascals
 # TYPE ecowitt_vapor_pressure_deficit_pascals gauge
-ecowitt_vapor_pressure_deficit_pascals 992.0
+ecowitt_vapor_pressure_deficit_pascals 895.0
 # HELP ecowitt_dew_point_celsius Dew point in degrees Celsius
 # TYPE ecowitt_dew_point_celsius gauge
-ecowitt_dew_point_celsius{sensor="outdoor"} 21.5
+ecowitt_dew_point_celsius{sensor="outdoor"} 21.38888888888889
+# HELP ecowitt_sensor_battery_flag Inline low-battery flag from a common_list entry (typically 1 = low); source id in the label
+# TYPE ecowitt_sensor_battery_flag gauge
+ecowitt_sensor_battery_flag{source_id="0x03"} 0.0
 # HELP ecowitt_wind_speed_mps Wind speed in meters per second
 # TYPE ecowitt_wind_speed_mps gauge
-ecowitt_wind_speed_mps 0.0
+ecowitt_wind_speed_mps 1.1980672
 # HELP ecowitt_wind_gust_mps Wind gust speed in meters per second
 # TYPE ecowitt_wind_gust_mps gauge
-ecowitt_wind_gust_mps 0.0
+ecowitt_wind_gust_mps 2.6017728
 # HELP ecowitt_wind_max_daily_mps Daily maximum wind speed in meters per second
 # TYPE ecowitt_wind_max_daily_mps gauge
-ecowitt_wind_max_daily_mps 4.0993568
+ecowitt_wind_max_daily_mps 4.8012096
 # HELP ecowitt_solar_radiation_wm2 Solar radiation in watts per square meter
 # TYPE ecowitt_solar_radiation_wm2 gauge
-ecowitt_solar_radiation_wm2 49.64
+ecowitt_solar_radiation_wm2 46.65
 # HELP ecowitt_uv_index Ultraviolet index (0-15)
 # TYPE ecowitt_uv_index gauge
 ecowitt_uv_index 0.0
 # HELP ecowitt_wind_direction_degrees Wind direction in degrees
 # TYPE ecowitt_wind_direction_degrees gauge
-ecowitt_wind_direction_degrees 304.0
+ecowitt_wind_direction_degrees 180.0
 # HELP ecowitt_wind_direction_10min_average_degrees 10-minute average wind direction in degrees
 # TYPE ecowitt_wind_direction_10min_average_degrees gauge
-ecowitt_wind_direction_10min_average_degrees 350.0
+ecowitt_wind_direction_10min_average_degrees 38.0
 # HELP ecowitt_pressure_absolute_pascals Absolute barometric pressure in pascals
 # TYPE ecowitt_pressure_absolute_pascals gauge
 ecowitt_pressure_absolute_pascals{sensor="indoor"} 98577.78379
@@ -80,13 +83,13 @@ ecowitt_pressure_absolute_pascals{sensor="indoor"} 98577.78379
 ecowitt_pressure_relative_pascals{sensor="indoor"} 98577.78379
 # HELP ecowitt_lightning_distance_meters Distance to last detected lightning strike in meters
 # TYPE ecowitt_lightning_distance_meters gauge
-ecowitt_lightning_distance_meters 9977.9328
+ecowitt_lightning_distance_meters 26876.0448
 # HELP ecowitt_lightning_strike_count Lightning strike count
 # TYPE ecowitt_lightning_strike_count gauge
-ecowitt_lightning_strike_count 403.0
+ecowitt_lightning_strike_count 466.0
 # HELP ecowitt_lightning_last_strike_timestamp_seconds Unix timestamp of the last detected lightning strike
 # TYPE ecowitt_lightning_last_strike_timestamp_seconds gauge
-ecowitt_lightning_last_strike_timestamp_seconds 1.783105043e+09
+ecowitt_lightning_last_strike_timestamp_seconds 1.783106591e+09
 # HELP ecowitt_sensor_battery_level Sensor battery level (raw; 0-5 where applicable)
 # TYPE ecowitt_sensor_battery_level gauge
 ecowitt_sensor_battery_level{channel="",name="",sensor="lightning"} 5.0
@@ -110,9 +113,21 @@ ecowitt_sensor_battery_volts{channel="3",name="RightBed",sensor="soil"} 1.5
 ecowitt_sensor_battery_volts{channel="4",name="LeftBed",sensor="soil"} 1.5
 ecowitt_sensor_battery_volts{channel="",name="",sensor="rain_traditional"} 1.7
 ecowitt_sensor_battery_volts{channel="",name="",sensor="rain_piezo"} 3.28
+# HELP ecowitt_gateway_free_heap_bytes Gateway free heap memory in bytes
+# TYPE ecowitt_gateway_free_heap_bytes gauge
+ecowitt_gateway_free_heap_bytes 96220.0
+# HELP ecowitt_gateway_runtime_seconds Gateway uptime in seconds since boot
+# TYPE ecowitt_gateway_runtime_seconds gauge
+ecowitt_gateway_runtime_seconds 74332.0
+# HELP ecowitt_gateway_sensor_interval_seconds Gateway sensor data update interval in seconds
+# TYPE ecowitt_gateway_sensor_interval_seconds gauge
+ecowitt_gateway_sensor_interval_seconds 30.0
+# HELP ecowitt_gateway_is_cnip Gateway is_cnip flag (1 = true, 0 = false)
+# TYPE ecowitt_gateway_is_cnip gauge
+ecowitt_gateway_is_cnip 0.0
 # HELP ecowitt_rain_millimeters Rain accumulation in millimeters
 # TYPE ecowitt_rain_millimeters gauge
-ecowitt_rain_millimeters{gauge="traditional",period="event"} 0.254
+ecowitt_rain_millimeters{gauge="traditional",period="event"} 0.0
 ecowitt_rain_millimeters{gauge="traditional",period="hourly"} 0.254
 ecowitt_rain_millimeters{gauge="traditional",period="day"} 0.254
 ecowitt_rain_millimeters{gauge="traditional",period="week"} 0.254
@@ -131,6 +146,9 @@ ecowitt_rain_rate_mm_per_hour{gauge="piezo"} 0.0
 # HELP ecowitt_piezo_rain_state Piezo (haptic) rain sensor state (1 = rain currently detected, 0 = dry)
 # TYPE ecowitt_piezo_rain_state gauge
 ecowitt_piezo_rain_state 1.0
+# HELP ecowitt_sensor_capacitor_volts Sensor supercapacitor voltage in volts (WS90)
+# TYPE ecowitt_sensor_capacitor_volts gauge
+ecowitt_sensor_capacitor_volts{channel="",name="",sensor="rain_piezo"} 5.2
 # HELP ecowitt_sensor_present 1 if a sensor is paired in this slot, 0 otherwise
 # TYPE ecowitt_sensor_present gauge
 ecowitt_sensor_present{id="FFFFFFFE",name="Wind & Rain",sensor="wh85"} 0.0
@@ -165,21 +183,80 @@ ecowitt_sensor_present{id="FFFFFFFE",name="Lds CH1",sensor="wh54"} 0.0
 ecowitt_sensor_present{id="FFFFFFFE",name="Lds CH2",sensor="wh54"} 0.0
 ecowitt_sensor_present{id="FFFFFFFE",name="Lds CH3",sensor="wh54"} 0.0
 ecowitt_sensor_present{id="FFFFFFFE",name="Lds CH4",sensor="wh54"} 0.0
+ecowitt_sensor_present{id="C949",name="Soil moisture CH1",sensor="wh51"} 1.0
+ecowitt_sensor_present{id="CB23",name="Soil moisture CH2",sensor="wh51"} 1.0
+ecowitt_sensor_present{id="CA08",name="Soil moisture CH3",sensor="wh51"} 1.0
+ecowitt_sensor_present{id="CCC8",name="Soil moisture CH4",sensor="wh51"} 1.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH5",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH6",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH7",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH8",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH9",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH10",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH11",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH12",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH13",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH14",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH15",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Soil moisture CH16",sensor="wh51"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp CH1",sensor="wh34"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp CH2",sensor="wh34"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp CH3",sensor="wh34"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp CH4",sensor="wh34"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp CH5",sensor="wh34"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp CH6",sensor="wh34"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp CH7",sensor="wh34"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp CH8",sensor="wh34"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leaf Wetness CH1",sensor="wh35"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leaf Wetness CH2",sensor="wh35"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leaf Wetness CH3",sensor="wh35"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leaf Wetness CH4",sensor="wh35"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leaf Wetness CH5",sensor="wh35"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leaf Wetness CH6",sensor="wh35"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leaf Wetness CH7",sensor="wh35"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leaf Wetness CH8",sensor="wh35"} 0.0
 # HELP ecowitt_sensor_rssi_dbm Sensor received signal strength in dBm
 # TYPE ecowitt_sensor_rssi_dbm gauge
-ecowitt_sensor_rssi_dbm{id="129D0",name="Temp & Humidity & Solar & Wind & Rain",sensor="wh90"} -69.0
-ecowitt_sensor_rssi_dbm{id="3F79",name="Rain",sensor="wh40"} -77.0
-ecowitt_sensor_rssi_dbm{id="F3",name="Temp & Humidity",sensor="wh26"} -66.0
-ecowitt_sensor_rssi_dbm{id="D912",name="Lightning",sensor="wh57"} -78.0
+ecowitt_sensor_rssi_dbm{id="129D0",name="Temp & Humidity & Solar & Wind & Rain",sensor="wh90"} -70.0
+ecowitt_sensor_rssi_dbm{id="3F79",name="Rain",sensor="wh40"} -65.0
+ecowitt_sensor_rssi_dbm{id="F3",name="Temp & Humidity",sensor="wh26"} -65.0
+ecowitt_sensor_rssi_dbm{id="D912",name="Lightning",sensor="wh57"} -74.0
+ecowitt_sensor_rssi_dbm{id="C949",name="Soil moisture CH1",sensor="wh51"} -89.0
+ecowitt_sensor_rssi_dbm{id="CB23",name="Soil moisture CH2",sensor="wh51"} -88.0
+ecowitt_sensor_rssi_dbm{id="CA08",name="Soil moisture CH3",sensor="wh51"} -87.0
+ecowitt_sensor_rssi_dbm{id="CCC8",name="Soil moisture CH4",sensor="wh51"} -72.0
+# HELP ecowitt_sensor_signal Sensor signal quality (0-4 bars) from the registry
+# TYPE ecowitt_sensor_signal gauge
+ecowitt_sensor_signal{id="129D0",name="Temp & Humidity & Solar & Wind & Rain",sensor="wh90"} 4.0
+ecowitt_sensor_signal{id="3F79",name="Rain",sensor="wh40"} 4.0
+ecowitt_sensor_signal{id="F3",name="Temp & Humidity",sensor="wh26"} 4.0
+ecowitt_sensor_signal{id="D912",name="Lightning",sensor="wh57"} 4.0
+ecowitt_sensor_signal{id="C949",name="Soil moisture CH1",sensor="wh51"} 4.0
+ecowitt_sensor_signal{id="CB23",name="Soil moisture CH2",sensor="wh51"} 4.0
+ecowitt_sensor_signal{id="CA08",name="Soil moisture CH3",sensor="wh51"} 4.0
+ecowitt_sensor_signal{id="CCC8",name="Soil moisture CH4",sensor="wh51"} 4.0
+# HELP ecowitt_sensor_registry_battery Raw battery value from the sensor registry (get_sensors_info "batt"; semantics vary by family)
+# TYPE ecowitt_sensor_registry_battery gauge
+ecowitt_sensor_registry_battery{id="129D0",name="Temp & Humidity & Solar & Wind & Rain",sensor="wh90"} 5.0
+ecowitt_sensor_registry_battery{id="3F79",name="Rain",sensor="wh40"} 5.0
+ecowitt_sensor_registry_battery{id="F3",name="Temp & Humidity",sensor="wh26"} 0.0
+ecowitt_sensor_registry_battery{id="D912",name="Lightning",sensor="wh57"} 5.0
+ecowitt_sensor_registry_battery{id="C949",name="Soil moisture CH1",sensor="wh51"} 5.0
+ecowitt_sensor_registry_battery{id="CB23",name="Soil moisture CH2",sensor="wh51"} 5.0
+ecowitt_sensor_registry_battery{id="CA08",name="Soil moisture CH3",sensor="wh51"} 5.0
+ecowitt_sensor_registry_battery{id="CCC8",name="Soil moisture CH4",sensor="wh51"} 5.0
 # HELP ecowitt_sensor_info Sensor firmware version info (constant 1)
 # TYPE ecowitt_sensor_info gauge
 ecowitt_sensor_info{id="129D0",name="Temp & Humidity & Solar & Wind & Rain",sensor="wh90",version="161"} 1.0
 # HELP ecowitt_firmware_info Gateway firmware version info (constant 1)
 # TYPE ecowitt_firmware_info gauge
 ecowitt_firmware_info{platform="ecowitt",version="GW3000B_V1.2.1"} 1.0
+# HELP ecowitt_gateway_firmware_update_available 1 if the gateway reports an available firmware update, else 0
+# TYPE ecowitt_gateway_firmware_update_available gauge
+ecowitt_gateway_firmware_update_available 0.0
 # HELP ecowitt_scrape_duration_seconds Duration of the gateway scrape in seconds
 # TYPE ecowitt_scrape_duration_seconds gauge
-ecowitt_scrape_duration_seconds 0.0862267017364502
+ecowitt_scrape_duration_seconds 0.13732242584228516
 # HELP ecowitt_scrape_success 1 if the last scrape succeeded, 0 otherwise
 # TYPE ecowitt_scrape_success gauge
 ecowitt_scrape_success 1.0

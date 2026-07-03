@@ -83,15 +83,33 @@ Temperature/humidity carry a `sensor` label (`indoor`/`outdoor`, or a sensor-fam
 
 ### Sensor Health
 
+Signal/battery/presence for the registry metrics come from `get_sensors_info`, which the exporter reads across **all** of its pages (the page count comes from `get_version`'s `sensorid_page`), so every sensor slot — paired or not — is represented.
+
 | Metric | Description |
 |--------|-------------|
-| `ecowitt_sensor_battery_volts{sensor,channel,name}` | Battery voltage (only where a `voltage` field is reported — the unambiguous case) |
-| `ecowitt_sensor_battery_level{sensor,channel,name}` | Raw battery level (0–5 where applicable; semantics vary by sensor family) |
-| `ecowitt_sensor_rssi_dbm{sensor,name,id}` | Received signal strength (from the sensor registry) |
+| `ecowitt_sensor_rssi_dbm{sensor,name,id}` | Received signal strength in dBm (registry) |
+| `ecowitt_sensor_signal{sensor,name,id}` | Signal quality, 0–4 bars (registry) |
 | `ecowitt_sensor_present{sensor,name,id}` | `1` if a sensor is paired in this slot, `0` otherwise |
 | `ecowitt_sensor_info{sensor,name,id,version}` | Sensor firmware version info (constant `1`) |
+| `ecowitt_sensor_battery_volts{sensor,channel,name}` | Battery voltage from a live-data `voltage` field (the unambiguous case) |
+| `ecowitt_sensor_battery_level{sensor,channel,name}` | Battery level (`0–5`) from a live-data `battery` field |
+| `ecowitt_sensor_registry_battery{sensor,name,id}` | Raw `batt` from the registry (`0–5` level for most families, a `0`/`1` flag for some) |
+| `ecowitt_sensor_battery_flag{source_id}` | Inline low-battery flag from a `common_list` entry (typically `1` = low) |
+| `ecowitt_sensor_capacitor_volts{sensor,channel,name}` | Supercapacitor voltage (WS90) |
 
-> **Battery note:** battery encoding varies by sensor family (level `0–5` vs a `voltage` in volts vs a `0`/`1` low-voltage flag). This exporter prefers the explicit `voltage` field where present and also exposes the raw level; low-battery *thresholding* is left to the alerting layer.
+> **Battery note:** battery encoding varies by sensor family and by source (a `0–5` level, a `voltage` in volts, or a `0`/`1` low-voltage flag). Rather than over-normalize, this exporter surfaces each source as its own metric (above); the same physical sensor may therefore appear in more than one. Low-battery *thresholding* is left to the alerting layer. Note the `sensor`/`name` labels differ by source: registry metrics use the gateway's slot name (e.g. `Soil moisture CH1`) while live-data metrics use your custom name (e.g. `BerriesFront`) — both are reported verbatim from the API.
+
+### Gateway
+
+Gateway-internal stats (from the `debug` group of `get_livedata_info` and from `get_version`):
+
+| Metric | Description |
+|--------|-------------|
+| `ecowitt_gateway_free_heap_bytes` | Free heap memory in bytes |
+| `ecowitt_gateway_runtime_seconds` | Uptime in seconds since boot |
+| `ecowitt_gateway_sensor_interval_seconds` | Sensor data update interval in seconds |
+| `ecowitt_gateway_is_cnip` | Gateway `is_cnip` flag (`1`/`0`) |
+| `ecowitt_gateway_firmware_update_available` | `1` if the gateway reports an available firmware update |
 
 ### Meta
 
