@@ -1,0 +1,180 @@
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 316.0
+python_gc_objects_collected_total{generation="1"} 0.0
+python_gc_objects_collected_total{generation="2"} 0.0
+# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC
+# TYPE python_gc_objects_uncollectable_total counter
+python_gc_objects_uncollectable_total{generation="0"} 0.0
+python_gc_objects_uncollectable_total{generation="1"} 0.0
+python_gc_objects_uncollectable_total{generation="2"} 0.0
+# HELP python_gc_collections_total Number of times this generation was collected
+# TYPE python_gc_collections_total counter
+python_gc_collections_total{generation="0"} 23.0
+python_gc_collections_total{generation="1"} 2.0
+python_gc_collections_total{generation="2"} 0.0
+# HELP python_info Python platform information
+# TYPE python_info gauge
+python_info{implementation="CPython",major="3",minor="14",patchlevel="5",version="3.14.5"} 1.0
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 5.2076544e+07
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 3.9211008e+07
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1.78310413594e+09
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 0.09
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds 6.0
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds 524288.0
+# HELP ecowitt_temperature_celsius Temperature in degrees Celsius
+# TYPE ecowitt_temperature_celsius gauge
+ecowitt_temperature_celsius{channel="",name="",sensor="outdoor"} 27.77777777777778
+ecowitt_temperature_celsius{channel="",name="",sensor="indoor"} 22.38888888888889
+# HELP ecowitt_humidity_percent Relative humidity in percent
+# TYPE ecowitt_humidity_percent gauge
+ecowitt_humidity_percent{channel="",name="",sensor="outdoor"} 70.0
+ecowitt_humidity_percent{channel="",name="",sensor="indoor"} 57.0
+# HELP ecowitt_apparent_temperature_celsius Apparent ("feels like") temperature in degrees Celsius
+# TYPE ecowitt_apparent_temperature_celsius gauge
+ecowitt_apparent_temperature_celsius{sensor="outdoor"} 30.22222222222222
+# HELP ecowitt_vapor_pressure_deficit_pascals Vapor pressure deficit in pascals (uncertain mapping of id "5")
+# TYPE ecowitt_vapor_pressure_deficit_pascals gauge
+ecowitt_vapor_pressure_deficit_pascals 1121.0
+# HELP ecowitt_dew_point_celsius Dew point in degrees Celsius
+# TYPE ecowitt_dew_point_celsius gauge
+ecowitt_dew_point_celsius{sensor="outdoor"} 21.888888888888893
+# HELP ecowitt_wind_speed_mps Wind speed in meters per second
+# TYPE ecowitt_wind_speed_mps gauge
+ecowitt_wind_speed_mps 0.0
+# HELP ecowitt_wind_gust_mps Wind gust speed in meters per second
+# TYPE ecowitt_wind_gust_mps gauge
+ecowitt_wind_gust_mps 0.5006848
+# HELP ecowitt_wind_max_daily_mps Daily maximum wind speed in meters per second
+# TYPE ecowitt_wind_max_daily_mps gauge
+ecowitt_wind_max_daily_mps 4.0993568
+# HELP ecowitt_solar_radiation_wm2 Solar radiation in watts per square meter
+# TYPE ecowitt_solar_radiation_wm2 gauge
+ecowitt_solar_radiation_wm2 78.22
+# HELP ecowitt_uv_index Ultraviolet index (0-15)
+# TYPE ecowitt_uv_index gauge
+ecowitt_uv_index 0.0
+# HELP ecowitt_wind_direction_degrees Wind direction in degrees
+# TYPE ecowitt_wind_direction_degrees gauge
+ecowitt_wind_direction_degrees 89.0
+# HELP ecowitt_pressure_absolute_pascals Absolute barometric pressure in pascals
+# TYPE ecowitt_pressure_absolute_pascals gauge
+ecowitt_pressure_absolute_pascals{sensor="indoor"} 98577.78379
+# HELP ecowitt_pressure_relative_pascals Relative barometric pressure in pascals
+# TYPE ecowitt_pressure_relative_pascals gauge
+ecowitt_pressure_relative_pascals{sensor="indoor"} 98577.78379
+# HELP ecowitt_lightning_distance_meters Distance to last detected lightning strike in meters
+# TYPE ecowitt_lightning_distance_meters gauge
+ecowitt_lightning_distance_meters 19955.8656
+# HELP ecowitt_lightning_strike_count Lightning strike count
+# TYPE ecowitt_lightning_strike_count gauge
+ecowitt_lightning_strike_count 272.0
+# HELP ecowitt_lightning_last_strike_timestamp_seconds Unix timestamp of the last detected lightning strike
+# TYPE ecowitt_lightning_last_strike_timestamp_seconds gauge
+ecowitt_lightning_last_strike_timestamp_seconds 1.783104136e+09
+# HELP ecowitt_sensor_battery_level Sensor battery level (raw; 0-5 where applicable)
+# TYPE ecowitt_sensor_battery_level gauge
+ecowitt_sensor_battery_level{channel="",name="",sensor="lightning"} 5.0
+ecowitt_sensor_battery_level{channel="1",name="BerriesFront",sensor="soil"} 5.0
+ecowitt_sensor_battery_level{channel="2",name="BerriesBack",sensor="soil"} 5.0
+ecowitt_sensor_battery_level{channel="3",name="RightBed",sensor="soil"} 5.0
+ecowitt_sensor_battery_level{channel="4",name="LeftBed",sensor="soil"} 5.0
+ecowitt_sensor_battery_level{channel="",name="",sensor="rain_traditional"} 5.0
+ecowitt_sensor_battery_level{channel="",name="",sensor="rain_piezo"} 5.0
+# HELP ecowitt_soil_moisture_percent Soil moisture in percent
+# TYPE ecowitt_soil_moisture_percent gauge
+ecowitt_soil_moisture_percent{channel="1",name="BerriesFront"} 44.0
+ecowitt_soil_moisture_percent{channel="2",name="BerriesBack"} 64.0
+ecowitt_soil_moisture_percent{channel="3",name="RightBed"} 48.0
+ecowitt_soil_moisture_percent{channel="4",name="LeftBed"} 28.0
+# HELP ecowitt_sensor_battery_volts Sensor battery voltage in volts
+# TYPE ecowitt_sensor_battery_volts gauge
+ecowitt_sensor_battery_volts{channel="1",name="BerriesFront",sensor="soil"} 1.8
+ecowitt_sensor_battery_volts{channel="2",name="BerriesBack",sensor="soil"} 1.6
+ecowitt_sensor_battery_volts{channel="3",name="RightBed",sensor="soil"} 1.5
+ecowitt_sensor_battery_volts{channel="4",name="LeftBed",sensor="soil"} 1.5
+ecowitt_sensor_battery_volts{channel="",name="",sensor="rain_traditional"} 1.7
+ecowitt_sensor_battery_volts{channel="",name="",sensor="rain_piezo"} 3.28
+# HELP ecowitt_rain_millimeters Rain accumulation in millimeters
+# TYPE ecowitt_rain_millimeters gauge
+ecowitt_rain_millimeters{gauge="traditional",period="event"} 0.254
+ecowitt_rain_millimeters{gauge="traditional",period="day"} 0.254
+ecowitt_rain_millimeters{gauge="traditional",period="week"} 0.254
+ecowitt_rain_millimeters{gauge="traditional",period="month"} 0.254
+ecowitt_rain_millimeters{gauge="traditional",period="year"} 0.254
+ecowitt_rain_millimeters{gauge="piezo",period="event"} 1.27
+ecowitt_rain_millimeters{gauge="piezo",period="day"} 1.778
+ecowitt_rain_millimeters{gauge="piezo",period="week"} 1.778
+ecowitt_rain_millimeters{gauge="piezo",period="month"} 1.778
+ecowitt_rain_millimeters{gauge="piezo",period="year"} 1.778
+# HELP ecowitt_rain_rate_mm_per_hour Rain rate in millimeters per hour
+# TYPE ecowitt_rain_rate_mm_per_hour gauge
+ecowitt_rain_rate_mm_per_hour{gauge="traditional"} 0.0
+ecowitt_rain_rate_mm_per_hour{gauge="piezo"} 0.508
+# HELP ecowitt_sensor_present 1 if a sensor is paired in this slot, 0 otherwise
+# TYPE ecowitt_sensor_present gauge
+ecowitt_sensor_present{id="FFFFFFFE",name="Wind & Rain",sensor="wh85"} 0.0
+ecowitt_sensor_present{id="129D0",name="Temp & Humidity & Solar & Wind & Rain",sensor="wh90"} 1.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp & Humidity & Solar & Wind & Rain",sensor="wh69"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Solar & Wind",sensor="wh68"} 0.0
+ecowitt_sensor_present{id="3F79",name="Rain",sensor="wh40"} 1.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Rain Mini",sensor="wn20"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp & Humidity & Pressure",sensor="wh25"} 0.0
+ecowitt_sensor_present{id="F3",name="Temp & Humidity",sensor="wh26"} 1.0
+ecowitt_sensor_present{id="FFFFFFFE",name="BGT",sensor="wn38"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp & Humidity & Solar & Wind",sensor="wh80"} 0.0
+ecowitt_sensor_present{id="D912",name="Lightning",sensor="wh57"} 1.0
+ecowitt_sensor_present{id="FFFFFFFE",name="PM25 & PM10 & CO2",sensor="wh45"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="PM2.5 CH1",sensor="wh41"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="PM2.5 CH2",sensor="wh41"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="PM2.5 CH3",sensor="wh41"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="PM2.5 CH4",sensor="wh41"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leak CH1",sensor="wh55"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leak CH2",sensor="wh55"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leak CH3",sensor="wh55"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Leak CH4",sensor="wh55"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp & Humidity CH1",sensor="wh31"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp & Humidity CH2",sensor="wh31"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp & Humidity CH3",sensor="wh31"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp & Humidity CH4",sensor="wh31"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp & Humidity CH5",sensor="wh31"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp & Humidity CH6",sensor="wh31"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp & Humidity CH7",sensor="wh31"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Temp & Humidity CH8",sensor="wh31"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Lds CH1",sensor="wh54"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Lds CH2",sensor="wh54"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Lds CH3",sensor="wh54"} 0.0
+ecowitt_sensor_present{id="FFFFFFFE",name="Lds CH4",sensor="wh54"} 0.0
+# HELP ecowitt_sensor_rssi_dbm Sensor received signal strength in dBm
+# TYPE ecowitt_sensor_rssi_dbm gauge
+ecowitt_sensor_rssi_dbm{id="129D0",name="Temp & Humidity & Solar & Wind & Rain",sensor="wh90"} -69.0
+ecowitt_sensor_rssi_dbm{id="3F79",name="Rain",sensor="wh40"} -65.0
+ecowitt_sensor_rssi_dbm{id="F3",name="Temp & Humidity",sensor="wh26"} -67.0
+ecowitt_sensor_rssi_dbm{id="D912",name="Lightning",sensor="wh57"} -79.0
+# HELP ecowitt_sensor_info Sensor firmware version info (constant 1)
+# TYPE ecowitt_sensor_info gauge
+ecowitt_sensor_info{id="129D0",name="Temp & Humidity & Solar & Wind & Rain",sensor="wh90",version="161"} 1.0
+# HELP ecowitt_firmware_info Gateway firmware version info (constant 1)
+# TYPE ecowitt_firmware_info gauge
+ecowitt_firmware_info{platform="ecowitt",version="GW3000B_V1.2.1"} 1.0
+# HELP ecowitt_scrape_duration_seconds Duration of the gateway scrape in seconds
+# TYPE ecowitt_scrape_duration_seconds gauge
+ecowitt_scrape_duration_seconds 0.08439469337463379
+# HELP ecowitt_scrape_success 1 if the last scrape succeeded, 0 otherwise
+# TYPE ecowitt_scrape_success gauge
+ecowitt_scrape_success 1.0
+# HELP ecowitt_unmapped_fields Count of fields skipped this scrape because their id or unit was unrecognized
+# TYPE ecowitt_unmapped_fields gauge
+ecowitt_unmapped_fields 4.0
