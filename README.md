@@ -26,6 +26,7 @@ Then scrape `http://<host>:8000/metrics`.
 
 * `ECOWITT_HOST` (**required**) — hostname or IP of the Ecowitt gateway, e.g. `ecowitt.example.com` or `10.0.0.5`. The base URL used is `http://{ECOWITT_HOST}/`.
 * `PORT` (*optional*, default `8000`) — port the exporter listens on.
+* `ECOWITT_TZ` (*optional*, default `America/New_York`) — IANA timezone name used to interpret the gateway's timestamps. The gateway reports the lightning last-strike time as a naive local wall-clock string (no UTC offset), so this zone is applied before converting to the `ecowitt_lightning_last_strike_timestamp_seconds` Unix epoch. Set it to your gateway's configured timezone; it is DST-aware.
 
 ### Running Locally
 

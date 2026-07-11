@@ -32,6 +32,7 @@ import logging
 import socket
 import time
 from datetime import datetime
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 from typing import Generator, Dict, Optional, Tuple, List, Callable
 
 import requests
@@ -43,6 +44,31 @@ from prometheus_client.samples import Sample
 FORMAT = "[%(asctime)s %(levelname)s] %(message)s"
 logging.basicConfig(level=logging.WARNING, format=FORMAT)
 logger = logging.getLogger()
+
+#: Default timezone assumed for the gateway's naive local timestamps.
+DEFAULT_TZ = 'America/New_York'
+
+
+def _resolve_tz() -> ZoneInfo:
+    """Resolve the timezone used to interpret the gateway's local timestamps.
+
+    The gateway emits naive wall-clock strings (no offset) in its own local
+    timezone; we must attach that zone before converting to a Unix epoch, since
+    the container's own timezone is typically UTC. Configurable via ``ECOWITT_TZ``
+    (an IANA name, e.g. ``America/New_York``), defaulting to ``DEFAULT_TZ``.
+    """
+    name = os.environ.get('ECOWITT_TZ') or DEFAULT_TZ
+    try:
+        return ZoneInfo(name)
+    except (ZoneInfoNotFoundError, ValueError):
+        logger.warning(
+            'Invalid ECOWITT_TZ %r; falling back to %s', name, DEFAULT_TZ
+        )
+        return ZoneInfo(DEFAULT_TZ)
+
+
+#: Timezone applied to naive gateway timestamps (see ``_resolve_tz``).
+ECOWITT_TZ = _resolve_tz()
 
 #: HTTP request timeout, in seconds, for calls to the gateway.
 REQUEST_TIMEOUT: int = 10
@@ -879,9 +905,20 @@ class EcowittCollector:
 
     @staticmethod
     def _parse_iso_timestamp(value: str) -> Optional[float]:
-        """Parse the gateway's local ISO date (no tz) to a Unix timestamp."""
+        """Parse the gateway's local ISO date (no tz) to a Unix timestamp.
+
+        The gateway emits a naive local wall-clock string with no timezone
+        (e.g. ``2026-07-11T15:14:03``). We attach the configured local zone
+        (``ECOWITT_TZ``) before converting, so the resulting epoch is correct
+        year-round (DST-aware) regardless of the container's own timezone --
+        which is otherwise assumed by ``datetime.timestamp()`` and is typically
+        UTC, yielding a timestamp offset by the local UTC offset.
+        """
         try:
-            return datetime.fromisoformat(value).timestamp()
+            dt = datetime.fromisoformat(value)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=ECOWITT_TZ)
+            return dt.timestamp()
         except (ValueError, TypeError):
             logger.warning('Cannot parse timestamp %r', value)
             return None
